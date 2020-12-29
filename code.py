@@ -35,7 +35,7 @@ TEXT_PERCENT = 1
 matrixportal.add_text(
     text_color=0x3d3d3d,
     text_font=terminalio.FONT,
-    text_position=(1, 24),
+    text_position=(5, 24),
     text_scale=1,
 )
 
@@ -43,7 +43,7 @@ TEXT_OUT_OF_HOURS = 2
 matrixportal.add_text(
     text_color=0x3d1f5c,
     text_font=terminalio.FONT,
-    text_position=(40, 24),
+    text_position=(37, 24),
     text_scale=1,
 )
 
@@ -66,26 +66,27 @@ while True:
 
         if result["marketState"] == "PRE":
             # before hours
-            afterHoursColor = 0x00ff00 if result["preMarketChangePercent"] > 0 else 0xff0000
-            matrixportal.set_text_color(afterHoursColor, TEXT_OUT_OF_HOURS)
+            after_hours_color = 0x009900 if result["preMarketChangePercent"] > 0 else 0x990000
             matrixportal.set_text("$%d" % result["preMarketPrice"], TEXT_OUT_OF_HOURS)
             percent_change = result["preMarketChangePercent"]
-            regular_hours_color = 0x009900 if result["regularMarketPrice"] > 0 else 0x990000
+            regular_hours_color = 0x002200 if result["regularMarketPrice"] > 0 else 0x220000
         elif result["marketState"] == "POST" or result["marketState"] == "POSTPOST":
             # after hours
-            afterHoursColor = 0x00ff00 if result["postMarketChangePercent"] > 0 else 0xff0000
-            matrixportal.set_text_color(afterHoursColor, TEXT_OUT_OF_HOURS)
+            after_hours_color = 0x00ff00 if result["postMarketChangePercent"] > 0 else 0xff0000
+            matrixportal.set_text_color(after_hours_color, TEXT_OUT_OF_HOURS)
             matrixportal.set_text("$%d" % result["postMarketPrice"], TEXT_OUT_OF_HOURS)
             percent_change += result["postMarketChangePercent"]
-            regular_hours_color = 0x009900 if result["regularMarketPrice"] > 0 else 0x990000
+            regular_hours_color = 0x002200 if result["regularMarketPrice"] > 0 else 0x220000
         else:
-            regular_hours_color = 0x00cc00 if result["regularMarketPrice"] > 0 else 0xcc0000
+            regular_hours_color = 0x009900 if result["regularMarketPrice"] > 0 else 0x990000
+            after_hours_color = 0x000000
 
-        percent_change_color = 0x00ff00 if percent_change > 0 else 0xff0000
+        percent_change_color = 0x005500 if percent_change > 0 else 0x550000
         matrixportal.set_text_color(percent_change_color, TEXT_PERCENT)
-        matrixportal.set_text("%0.2f%%" % percent_change, TEXT_PERCENT)
+        matrixportal.set_text("%0.2f%%" % abs(percent_change), TEXT_PERCENT)
 
         matrixportal.set_text_color(regular_hours_color, TEXT_REGULAR_HOURS)
+        matrixportal.set_text_color(after_hours_color, TEXT_OUT_OF_HOURS)
     except (ValueError, RuntimeError) as e:
         print("Some error occured, retrying! -", e)
 
