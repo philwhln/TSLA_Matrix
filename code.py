@@ -8,6 +8,7 @@ import board
 import terminalio
 from adafruit_matrixportal.matrixportal import MatrixPortal
 
+DEBUG=True
 TICKER_SYMBOL = "TSLA"
 DATA_SOURCE = "https://query2.finance.yahoo.com/v7/finance/quote?symbols=" + TICKER_SYMBOL
 
@@ -19,7 +20,7 @@ matrixportal = MatrixPortal(
     status_neopixel=board.NEOPIXEL,
     bit_depth=4,
     default_bg=cwd + "/tesla_background.bmp",
-    debug=True,
+    debug=DEBUG,
 )
 
 TEXT_REGULAR_HOURS = 0
@@ -51,9 +52,11 @@ matrixportal.preload_font((0x00A3, 0x20AC))  # preload gbp/euro symbol
 
 while True:
     try:
-        print(f'Fetching {DATA_SOURCE}')
+        if DEBUG:
+            print(f'Fetching {DATA_SOURCE}')
         result = requests.get(DATA_SOURCE).json()["quoteResponse"]["result"][0]
-        print(f'Got response: {result}')
+        if DEBUG:
+            print(f'Got response: {result}')
 
         # regular hours
         regular_hours_color = 0x00ff00 if result["regularMarketPrice"] > 0 else 0xff0000
@@ -83,8 +86,6 @@ while True:
         matrixportal.set_text("%0.2f%%" % percent_change, TEXT_PERCENT)
 
         matrixportal.set_text_color(regular_hours_color, TEXT_REGULAR_HOURS)
-
-        print("Response is", result)
     except (ValueError, RuntimeError) as e:
         print("Some error occured, retrying! -", e)
 
