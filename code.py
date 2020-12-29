@@ -87,7 +87,6 @@ while True:
         print("Response is", result)
     except (ValueError, RuntimeError) as e:
         print("Some error occured, retrying! -", e)
-        raise
 
     print("sleeping...")
     time.sleep(60)  # wait 1 minute
