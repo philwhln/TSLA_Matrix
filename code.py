@@ -69,16 +69,16 @@ while True:
             after_hours_color = 0x009900 if result["preMarketChangePercent"] > 0 else 0x990000
             matrixportal.set_text("$%d" % result["preMarketPrice"], TEXT_OUT_OF_HOURS)
             percent_change = result["preMarketChangePercent"]
-            regular_hours_color = 0x002200 if result["regularMarketPrice"] > 0 else 0x220000
+            regular_hours_color = 0x002200 if result["regularMarketChangePercent"] > 0 else 0x220000
         elif result["marketState"] == "POST" or result["marketState"] == "POSTPOST":
             # after hours
             after_hours_color = 0x00ff00 if result["postMarketChangePercent"] > 0 else 0xff0000
             matrixportal.set_text_color(after_hours_color, TEXT_OUT_OF_HOURS)
             matrixportal.set_text("$%d" % result["postMarketPrice"], TEXT_OUT_OF_HOURS)
             percent_change += result["postMarketChangePercent"]
-            regular_hours_color = 0x002200 if result["regularMarketPrice"] > 0 else 0x220000
+            regular_hours_color = 0x002200 if result["regularMarketChangePercent"] > 0 else 0x220000
         else:
-            regular_hours_color = 0x009900 if result["regularMarketPrice"] > 0 else 0x990000
+            regular_hours_color = 0x009900 if result["regularMarketChangePercent"] > 0 else 0x990000
             after_hours_color = 0x000000
 
         percent_change_color = 0x005500 if percent_change > 0 else 0x550000
